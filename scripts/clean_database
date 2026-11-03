@@ -1,0 +1,27 @@
+import duckdb
+
+con = duckdb.connect("db/mercato_nova.duckdb")
+
+# Delete delivery events first
+con.execute("DELETE FROM delivery_events")
+
+# Temporarily remove refund references
+con.execute("""
+    UPDATE orders
+    SET original_order_id = NULL
+""")
+
+# Now delete orders
+con.execute("DELETE FROM orders")
+
+# Delete remaining final tables
+con.execute("DELETE FROM customers")
+con.execute("DELETE FROM stores")
+
+# Clear staging tables
+con.execute("DELETE FROM stg_delivery_events")
+con.execute("DELETE FROM stg_customers")
+con.execute("DELETE FROM stg_orders")
+con.execute("DELETE FROM stg_stores")
+
+con.close()

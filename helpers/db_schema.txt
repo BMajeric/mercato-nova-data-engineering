@@ -1,0 +1,45 @@
+orders
+   order_id            PK                               varchar
+   order_timestamp                                      timestamptz
+   channel                                              varchar
+   delivery_zone       (can be empty)                   integer
+   amount_original                                      decimal(12,2)
+   currency_original                                    varchar(3)
+   amount_eur                                           decimal(12,2)
+   original_order_id   -> orders (can be empty)         varchar
+   store_id            -> stores                        varchar
+   customer_id         -> customers (can be empty)      varchar
+
+stores
+   store_id            PK                 varchar
+   store_name                             varchar
+   city                                   varchar
+   address             (can be empty)     varchar
+
+delivery_events
+   delivery_id         PK                              bigint
+   delivery_timestamp                                  timestamptz
+   level                                               varchar
+   event_type                                          varchar
+   order_id            -> orders (can be empty)        varchar
+   driver_id                                           varchar
+   app_version                                         varchar
+   battery                                             integer
+   raw_message                                         varchar
+
+customers
+   customer_id           PK                 varchar
+   first_name                               varchar
+   last_name                                varchar
+   email                                    varchar
+   phone                                    varchar
+   city                                     varchar
+   registered_at                            timestamptz
+   loyalty_tier                             varchar
+   marketing_opt_in      (can be empty)     boolean
+
+
+customer 1-----* order
+store 1-----* order
+order 1-----* delivery event
+order 1-----* order (refund)
